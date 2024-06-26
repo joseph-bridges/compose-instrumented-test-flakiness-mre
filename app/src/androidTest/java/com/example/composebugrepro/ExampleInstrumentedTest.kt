@@ -15,27 +15,58 @@
 package com.example.composebugrepro
 
 import android.content.Intent
+import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.test.core.app.ActivityScenario
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import kotlinx.coroutines.Dispatchers
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import java.util.Collections
 
 @OptIn(ExperimentalTestApi::class)
-@RunWith(AndroidJUnit4::class)
+@RunWith(Parameterized::class)
 class ExampleInstrumentedTest {
 
+
+    @JvmField
+    @Parameter(0)
+    var iteration: Int? = null
+
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters
+        fun data(): Collection<Int> {
+            return Collections.nCopies(1000, 0)
+        }
+    }
+
     @get:Rule
-    val composeRule = createEmptyComposeRule()
+    val composeRule = AndroidComposeTestRule<TestRule, ComponentActivity>(
+        activityRule = TestRule { base, _ -> base },
+        Dispatchers.IO,
+        activityProvider = {
+            error(
+                "createEmptyComposeRule() does not provide an Activity to set Compose content in." +
+                        " Launch and use the Activity yourself, or use createAndroidComposeRule()."
+            )
+        }
+    )
 
     @Test
     fun testLoadingCompleted() {
         launchActivity()
-        composeRule.waitUntilAtLeastOneExists(hasText("Content loaded"))
+
+        while(composeRule.onAllNodes(hasText("Content loaded")).fetchSemanticsNodes().isEmpty()) {
+           // do nothing.
+        }
     }
 
     private fun launchActivity() {

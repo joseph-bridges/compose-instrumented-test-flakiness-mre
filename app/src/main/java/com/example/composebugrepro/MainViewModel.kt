@@ -29,10 +29,39 @@ class MainViewModel: ViewModel() {
     val stateFlow: StateFlow<MainState> = _stateFlow
 
     fun updateState() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                delay(800) // simulate loading
-                _stateFlow.value = MainState.Loaded
+        repeat(1000) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    delay(1)
+                    _stateFlow.value = MainState.Loadish
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            delay(3) // simulate loading
+                            _stateFlow.value = MainState.Loading
+                        }
+                    }
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+
+                            delay(17)
+                            _stateFlow.value = MainState.Loadish
+                        }
+                    }
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            delay(43) // simulate loading
+                            _stateFlow.value = MainState.Loading
+                        }
+                    }
+                }
+            }
+        }
+        repeat(10000) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    delay(500) // simulate loading
+                    _stateFlow.value = MainState.Loaded
+                }
             }
         }
     }
@@ -41,4 +70,5 @@ class MainViewModel: ViewModel() {
 sealed class MainState {
     data object Loading: MainState()
     data object Loaded: MainState()
+    data object Loadish: MainState()
 }

@@ -36,6 +36,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.example.composebugrepro.MainState.Loaded
+import com.example.composebugrepro.MainState.Loading
 import com.example.composebugrepro.ui.theme.ComposeBugReproTheme
 
 class MainActivity : ComponentActivity() {
@@ -49,8 +51,9 @@ class MainActivity : ComponentActivity() {
                 val state by viewModel.stateFlow.collectAsState()
                 Log.i("FLAKE", "Updating UI with state ${state}. Is on main thread?: ${Looper.getMainLooper().isCurrentThread}. Thread name: ${Thread.currentThread().name}")
                 when(state) {
-                    is MainState.Loading -> Loading()
-                    is MainState.Loaded -> Loaded()
+                    is Loading -> Loading()
+                    is Loaded -> Loaded()
+                    MainState.Loadish -> Loadish()
                 }
             }
             LaunchedEffect(Unit) {
@@ -64,6 +67,13 @@ class MainActivity : ComponentActivity() {
 private fun Loading() {
     Scaffold {
         Text(modifier = Modifier.padding(it), text = "Content loading")
+    }
+}
+
+@Composable
+private fun Loadish() {
+    Scaffold {
+        Text(modifier = Modifier.padding(it), text = "Content loadish")
     }
 }
 
