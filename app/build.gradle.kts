@@ -60,7 +60,7 @@ android {
         }
     }
 }
-val composeVersion = "1.7.0-beta03"
+val composeVersion = "1.7.0-beta04"
 dependencies {
     constraints {
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
@@ -71,7 +71,7 @@ dependencies {
         implementation("androidx.compose.ui:ui:$composeVersion")
         implementation("androidx.compose.ui:ui-graphics:$composeVersion")
         implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-        implementation("androidx.compose.material3:material3:1.3.0-beta03")
+        implementation("androidx.compose.material3:material3:1.3.0-beta04")
         implementation("androidx.tracing:tracing:1.2.0")
         implementation("androidx.tracing:tracing-ktx:1.2.0")
         testImplementation("junit:junit:4.13.2")
@@ -92,7 +92,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-graphics:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.3.0-beta03")
+    implementation("androidx.compose.material3:material3:1.3.0-beta04")
     implementation("androidx.tracing:tracing:1.2.0")
     implementation("androidx.tracing:tracing-ktx:1.2.0")
     testImplementation("junit:junit:4.13.2")

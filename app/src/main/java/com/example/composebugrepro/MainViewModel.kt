@@ -28,42 +28,44 @@ class MainViewModel: ViewModel() {
     private val _stateFlow = MutableStateFlow<MainState>(MainState.Loading)
     val stateFlow: StateFlow<MainState> = _stateFlow
 
-    fun updateState() {
-        repeat(1000) {
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    delay(1)
-                    _stateFlow.value = MainState.Loadish
-                    viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
-                            delay(3) // simulate loading
-                            _stateFlow.value = MainState.Loading
-                        }
-                    }
-                    viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
+    suspend fun launchUpdates(count: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(31)
+                _stateFlow.value = MainState.Loadish
+                delay(33)
+                _stateFlow.value = MainState.Loading
+                delay(37)
+                _stateFlow.value = MainState.Loadish
+                delay(43)
+                _stateFlow.value = MainState.Loading
+                if (count > 0) launchUpdates(count - 7)
+            }
+        }
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(31)
+                _stateFlow.value = MainState.Loading
+                delay(33)
+                _stateFlow.value = MainState.Loadish
+                delay(37)
+                _stateFlow.value = MainState.Loading
+                delay(43)
+                _stateFlow.value = MainState.Loadish
+                if (count > 0) launchUpdates(count - 11)
+            }
+        }
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(1200)
+                _stateFlow.value = MainState.Loaded
+                if (count > 0) launchUpdates(count - 1)
+            }
+        }
+    }
 
-                            delay(17)
-                            _stateFlow.value = MainState.Loadish
-                        }
-                    }
-                    viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
-                            delay(43) // simulate loading
-                            _stateFlow.value = MainState.Loading
-                        }
-                    }
-                }
-            }
-        }
-        repeat(10000) {
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    delay(500) // simulate loading
-                    _stateFlow.value = MainState.Loaded
-                }
-            }
-        }
+    suspend fun updateState() {
+        launchUpdates(30)
     }
 }
 

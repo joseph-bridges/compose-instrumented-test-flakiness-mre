@@ -49,7 +49,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeBugReproTheme {
                 val state by viewModel.stateFlow.collectAsState()
-                Log.i("FLAKE", "Updating UI with state ${state}. Is on main thread?: ${Looper.getMainLooper().isCurrentThread}. Thread name: ${Thread.currentThread().name}")
+                if(!Looper.getMainLooper().isCurrentThread) {
+                    Log.e("FLAKE", "Updating UI with state ${state}. Is on main thread?: ${Looper.getMainLooper().isCurrentThread}. Thread name: ${Thread.currentThread().name}")
+                }
                 when(state) {
                     is Loading -> Loading()
                     is Loaded -> Loaded()
